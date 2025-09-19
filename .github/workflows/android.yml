@@ -33,7 +33,7 @@ jobs:
     - name: Upload CI module zip as artifact
       uses: actions/upload-artifact@v4
       with:
-        # 固定文件名为Hacker_Integrity_Fix-Rainbow.zip
-        name: Hacker_Integrity_Fix-Rainbow
+        # 固定文件名为Hacker_Integrity_Fix.zip
+        name: Hacker_Integrity_Fix
         path: 'module/*'
         compression-level: 9
