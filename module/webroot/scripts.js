@@ -9,15 +9,15 @@ const MIN_FONT_SIZE = 8;
 const MAX_FONT_SIZE = 24;
 
 const spoofConfig = [
-    { config: 'spoofBuild', label: 'Spoof Build', isAdvanced: false },
-    { config: 'spoofVendingBuild', label: 'Spoof Build (Play Store)', isAdvanced: false },
-    { config: 'spoofProps', label: 'Spoof Props', isAdvanced: true },
-    { config: 'spoofProvider', label: 'Spoof Provider', isAdvanced: true },
-    { config: 'spoofSignature', label: 'Spoof Signature', isAdvanced: true },
-    { config: 'spoofVendingSdk', label: 'Spoof Sdk (Play Store)', isAdvanced: true }
+    { config: 'spoofBuild', label: '伪装设备构建信息', isAdvanced: false },
+    { config: 'spoofVendingBuild', label: '伪装 Play Store 构建信息', isAdvanced: false },
+    { config: 'spoofProps', label: '伪装设备属性', isAdvanced: true },
+    { config: 'spoofProvider', label: '伪装内容提供商', isAdvanced: true },
+    { config: 'spoofSignature', label: '伪装系统签名', isAdvanced: true },
+    { config: 'spoofVendingSdk', label: '伪装 Play Store SDK', isAdvanced: true }
 ];
 
-// Apeend spoofConfig button
+// 添加 spoofConfig 开关
 function appendSpoofConfigToggles() {
     const advancedDiv = document.getElementById('advanced');
     const buttonBox = document.querySelector('.button-box');
@@ -43,7 +43,7 @@ function appendSpoofConfigToggles() {
     applyButtonEventListeners();
 }
 
-// Apply button event listeners
+// 应用按钮事件监听器
 function applyButtonEventListeners() {
     const fetchButton = document.getElementById('fetch');
     const viewButton = document.getElementById('view');
@@ -67,7 +67,7 @@ function applyButtonEventListeners() {
             lines.forEach(line => appendToOutput(line));
             appendToOutput("");
         } else {
-            appendToOutput(`[!] Failed to read pif.prop: ${result.stderr}`, true);
+            appendToOutput(`[!] 读取 pif.prop 失败: ${result.stderr}`, true);
         }
     });
 
@@ -77,7 +77,7 @@ function applyButtonEventListeners() {
             killall com.android.vending || true
         `);
         loadScriptOnlyConfig();
-        appendToOutput(`[+] ${scriptOnly ? 'Disabled' : 'Enabled'} script only mode.`);
+        appendToOutput(`[+] ${scriptOnly ? '已禁用' : '已启用'}仅脚本模式`);
     });
 
     advanced.addEventListener('click', () => {
@@ -123,27 +123,27 @@ function applyButtonEventListeners() {
 
     githubBtn.onclick = () => {
         const link = "https://github.com/KOWX712/PlayIntegrityFix/releases/latest";
-        toast("Redirecting to " + link);
+        toast("正在跳转到 " + link);
         setTimeout(() => {
             exec(`am start -a android.intent.action.VIEW -d ${link}`);
         }, 100);
     }
 }
 
-// Function to load the version from module.prop
+// 从 module.prop 加载版本信息
 async function loadVersionFromModuleProp() {
     const versionElement = document.getElementById('version-text');
     const { errno, stdout, stderr } = await exec("grep '^version=' /data/adb/modules/playintegrityfix/module.prop | cut -d'=' -f2");
     if (errno === 0) {
         versionElement.textContent = stdout.trim();
     } else {
-        appendToOutput(`[!] Failed to read version from module.prop: ${stderr}`, true);
-        console.error("Failed to read version from module.prop:", stderr);
+        appendToOutput(`[!] 从 module.prop 读取版本失败: ${stderr}`, true);
+        console.error("从 module.prop 读取版本失败:", stderr);
     }
     checkDescription();
 }
 
-// Check description
+// 检查描述信息
 async function checkDescription() {
     const unofficialOverlay = document.getElementById('unofficial-warning');
     const { errno } = await exec("grep -q 'tampered' /data/adb/modules/playintegrityfix/module.prop");
@@ -152,7 +152,7 @@ async function checkDescription() {
     }
 }
 
-// Function to load spoof config
+// 加载 spoof 配置
 async function loadSpoofConfig() {
     try {
         const { errno, stdout, stderr } = await exec(`
@@ -173,19 +173,19 @@ async function loadSpoofConfig() {
 
         if (model === null) model = pifMap.MODEL;
     } catch (error) {
-        appendToOutput(`[!] Failed to load spoof config: ${error}`, true);
-        appendToOutput('[!] Warning: Do not use third party tools to fetch pif.prop');
+        appendToOutput(`[!] 加载伪装配置失败: ${error}`, true);
+        appendToOutput('[!] 警告：请勿使用第三方工具获取 pif.prop');
         resetPifProp();
-        console.error(`Failed to load spoof config:`, error);
+        console.error(`加载伪装配置失败:`, error);
     }
 }
 
-// Reset pif.prop to default
+// 重置 pif.prop 为默认值
 function resetPifProp() {
     fetch('https://raw.githubusercontent.com/KOWX712/PlayIntegrityFix/inject_s/module/pif.prop')
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP 错误! 状态: ${response.status}`);
             }
             return response.text();
         })
@@ -196,17 +196,17 @@ function resetPifProp() {
                 rm -f /data/adb/pif.prop || true
             `);
             if (errno === 0) {
-                appendToOutput(`[+] Successfully reset pif.prop`);
+                appendToOutput(`[+] 成功重置 pif.prop`);
             } else {
-                appendToOutput(`[!] Failed to reset pif.prop: ${stderr}`, true);
+                appendToOutput(`[!] 重置 pif.prop 失败: ${stderr}`, true);
             }
         })
         .catch(error => {
-            appendToOutput(`[!] Failed to reset pif.prop: ${error.message}`);
+            appendToOutput(`[!] 重置 pif.prop 失败: ${error.message}`);
         });
 }
 
-// Function to setup spoof config button
+// 设置 spoof 配置按钮
 function setupSpoofConfigButton() {
     spoofConfig.forEach(item => {
         const container = item.config + "-container";
@@ -223,16 +223,16 @@ function setupSpoofConfigButton() {
                 const isSuccess = await updateSpoofConfig(toggle, item.config, stdout);
                 if (isSuccess) {
                     loadSpoofConfig();
-                    appendToOutput(`[+] ${toggle.checked ? "Disabled" : "Enabled"} ${item.config}`);
+                    appendToOutput(`[+] ${toggle.checked ? "已禁用" : "已启用"} ${item.config}`);
                 } else {
-                    appendToOutput(`[!] Failed to ${toggle.checked ? "disable" : "enable"} ${item.config}`);
+                    appendToOutput(`[!] ${toggle.checked ? "禁用" : "启用"} ${item.config} 失败`);
                 }
                 await exec(`
                     killall com.google.android.gms.unstable || true
                     killall com.android.vending || true
                 `);
             } else {
-                console.error(`Failed to find pif.prop:`, stderr);
+                console.error(`查找 pif.prop 失败:`, stderr);
             }
             unmuteToggle();
         });
@@ -240,10 +240,10 @@ function setupSpoofConfigButton() {
 }
 
 /**
- * Update pif.prop
- * @param {HTMLInputElement} toggle - config toggle of pif.prop
- * @param {string} type - prop key to change
- * @param {string} pifFile - Path of pif.prop list
+ * 更新 pif.prop
+ * @param {HTMLInputElement} toggle - pif.prop 的配置开关
+ * @param {string} type - 要更改的属性键
+ * @param {string} pifFile - pif.prop 文件路径列表
  * @returns {Promise<boolean>}
  */
 async function updateSpoofConfig(toggle, type, pifFile) {
@@ -252,41 +252,41 @@ async function updateSpoofConfig(toggle, type, pifFile) {
     
     for (const pifFile of files) {
         try {
-            // read
+            // 读取
             const { stdout } = await exec(`cat ${pifFile}`);
             const config = parsePropToMap(stdout);
 
-            // update field
+            // 更新字段
             config[type] = !toggle.checked;
             const prop = parseMapToProp(config);
 
-            // write
+            // 写入
             const { errno } = await exec(`echo '${prop}' > ${pifFile}`);
             if (errno !== 0) isSuccess = false;
 
-            // reminder
+            // 提醒
             if (config.spoofVendingBuild && config.spoofVendingSdk) {
-                appendToOutput('[!] spoofVendingSdk will not take effect when spoofVendingBuild is enabled.');
+                appendToOutput('[!] 当 spoofVendingBuild 启用时，spoofVendingSdk 将不会生效');
             }
 
-            // reminder
+            // 提醒
             const signature = await exec('unzip -l /system/etc/security/otacerts.zip | grep -oE "testkey|releasekey"');
             if (signature.errno === 0) {
                 if (signature.stdout.trim() === "testkey" && !config.spoofSignature) {
-                    appendToOutput('[!] Unsigned ROM detected, enable spoofSignature to fix.');
+                    appendToOutput('[!] 检测到未签名的 ROM，请启用 spoofSignature 来修复');
                 } else if (signature.stdout.trim() === "releasekey" && config.spoofSignature) {
-                    appendToOutput('[+] Signed ROM detected, enabling spoofSignature might not be useful.');
+                    appendToOutput('[+] 检测到已签名的 ROM，启用 spoofSignature 可能没有用处');
                 }
             }
         } catch (error) {
-            console.error(`Failed to update ${pifFile}:`, error);
+            console.error(`更新 ${pifFile} 失败:`, error);
             isSuccess = false;
         }
     }
     return isSuccess;
 }
 
-// Function to append element in output terminal
+// 在输出终端中添加内容
 function appendToOutput(content, error = false) {
     const output = document.querySelector('.output-terminal-content');
     if (content.trim() === "") {
@@ -302,7 +302,7 @@ function appendToOutput(content, error = false) {
     output.scrollTop = output.scrollHeight;
 }
 
-// Function to run the script and display its output
+// 运行脚本并显示输出
 function runAction() {
     if (shellRunning) return;
     muteToggle();
@@ -310,13 +310,13 @@ function runAction() {
     if (model && product) opts = { env: { MODEL: `"${model}"`, PRODUCT: `"${product}"`} };
     const scriptOutput = spawn("sh", ["/data/adb/modules/playintegrityfix/autopif.sh"], opts);
     scriptOutput.stdout.on('data', (data) => appendToOutput(data));
-    scriptOutput.stderr.on('data', (data) => appendToOutput(`[!] Error executing autopif.sh: ${data}`, true));
+    scriptOutput.stderr.on('data', (data) => appendToOutput(`[!] 执行 autopif.sh 时出错: ${data}`, true));
     scriptOutput.on('exit', () => {
         appendToOutput("");
         unmuteToggle();
     });
     scriptOutput.on('error', () => {
-        appendToOutput("[!] Error: Fail to execute autopif.sh", true);
+        appendToOutput("[!] 错误：无法执行 autopif.sh", true);
         appendToOutput("");
         unmuteToggle();
     });
@@ -326,12 +326,12 @@ function updateAutopif() {
     muteToggle();
     const scriptOutput = spawn("sh", ["/data/adb/modules/playintegrityfix/autopif_ota.sh"]);
     scriptOutput.stdout.on('data', (data) => appendToOutput(data));
-    scriptOutput.stderr.on('data', (data) => appendToOutput(`[!] Error executing autopif_ota.sh: ${data}`, true));
+    scriptOutput.stderr.on('data', (data) => appendToOutput(`[!] 执行 autopif_ota.sh 时出错: ${data}`, true));
     scriptOutput.on('exit', () => {
         unmuteToggle();
     });
     scriptOutput.on('error', () => {
-        appendToOutput("[!] Error: Fail to execute autopif_ota.sh", true);
+        appendToOutput("[!] 错误：无法执行 autopif_ota.sh", true);
         appendToOutput("");
         unmuteToggle();
     });
@@ -352,9 +352,9 @@ function unmuteToggle() {
 }
 
 /**
- * Parse prop to map
- * @param {string} prop - prop string
- * @returns {Object} - map of prop
+ * 解析属性为映射
+ * @param {string} prop - 属性字符串
+ * @returns {Object} - 属性映射
  */
 function parsePropToMap(prop) {
     const map = {};
@@ -376,9 +376,9 @@ function parsePropToMap(prop) {
 }
 
 /**
- * Parse map to prop
- * @param {Object} map - map of prop
- * @returns {string} - prop string
+ * 解析映射为属性
+ * @param {Object} map - 属性映射
+ * @returns {string} - 属性字符串
  */
 function parseMapToProp(map) {
     if (!map || typeof map !== 'object') return '';
@@ -391,16 +391,16 @@ function parseMapToProp(map) {
 }
 
 /**
- * Simulate MD3 ripple animation
- * Usage: class="ripple-element" style="position: relative; overflow: hidden;"
- * Note: Require background-color to work properly
+ * 模拟 MD3 涟漪动画
+ * 用法：class="ripple-element" style="position: relative; overflow: hidden;"
+ * 注意：需要设置背景颜色才能正常工作
  * @return {void}
  */
 function applyRippleEffect() {
     document.querySelectorAll('.ripple-element').forEach(element => {
         if (element.dataset.rippleListener !== "true") {
             element.addEventListener("pointerdown", async (event) => {
-                // Pointer up event
+                // 指针抬起事件
                 const handlePointerUp = () => {
                     ripple.classList.add("end");
                     setTimeout(() => {
@@ -416,36 +416,36 @@ function applyRippleEffect() {
                 const ripple = document.createElement("span");
                 ripple.classList.add("ripple");
 
-                // Calculate ripple size and position
+                // 计算涟漪大小和位置
                 const rect = element.getBoundingClientRect();
                 const width = rect.width;
                 const size = Math.max(rect.width, rect.height);
                 const x = event.clientX - rect.left - size / 2;
                 const y = event.clientY - rect.top - size / 2;
 
-                // Determine animation duration
+                // 确定动画持续时间
                 let duration = 0.2 + (width / 800) * 0.4;
                 duration = Math.min(0.8, Math.max(0.2, duration));
 
-                // Set ripple styles
+                // 设置涟漪样式
                 ripple.style.width = ripple.style.height = `${size}px`;
                 ripple.style.left = `${x}px`;
                 ripple.style.top = `${y}px`;
                 ripple.style.animationDuration = `${duration}s`;
                 ripple.style.transition = `opacity ${duration}s ease`;
 
-                // Adaptive color
+                // 自适应颜色
                 const computedStyle = window.getComputedStyle(element);
                 const bgColor = computedStyle.backgroundColor || "rgba(0, 0, 0, 0)";
                 const isDarkColor = (color) => {
                     const rgb = color.match(/\d+/g);
                     if (!rgb) return false;
                     const [r, g, b] = rgb.map(Number);
-                    return (r * 0.299 + g * 0.587 + b * 0.114) < 96; // Luma formula
+                    return (r * 0.299 + g * 0.587 + b * 0.114) < 96; // 亮度公式
                 };
                 ripple.style.backgroundColor = isDarkColor(bgColor) ? "rgba(255, 255, 255, 0.2)" : "";
 
-                // Append ripple
+                // 添加涟漪
                 element.appendChild(ripple);
             });
             element.dataset.rippleListener = "true";
@@ -453,14 +453,14 @@ function applyRippleEffect() {
     });
 }
 
-// Function to check if running in MMRL
+// 检查是否在 MMRL 中运行
 async function checkMMRL() {
     if (typeof ksu !== 'undefined' && ksu.mmrl) {
-        // Set status bars theme based on device theme
+        // 根据设备主题设置状态栏主题
         try {
             $playintegrityfix.setLightStatusBars(!window.matchMedia('(prefers-color-scheme: dark)').matches)
         } catch (error) {
-            console.log("Error setting status bars theme:", error)
+            console.log("设置状态栏主题时出错:", error)
         }
     }
 }
@@ -485,8 +485,8 @@ function loadScriptOnlyConfig() {
 }
 
 /**
- * fetch available model and array, retrieve from localStorage if last updated less than 1 day
- * @returns {Object} - An object contain an array of model and an array of product
+ * 获取可用型号和产品数组，如果上次更新在1天内，则从本地存储检索
+ * @returns {Object} - 包含型号数组和产品数组的对象
  */
 function getDeviceList() {
     const cacheKey = 'PIF_devices_list';
@@ -502,7 +502,7 @@ function getDeviceList() {
                 resolve(JSON.parse(cachedList));
                 return;
             } catch (e) {
-                // fallback to refresh if parse fails
+                // 如果解析失败则回退到刷新
             }
         }
         await new Promise(resolve => setTimeout(resolve, 300));
@@ -519,7 +519,7 @@ function getDeviceList() {
                 try {
                     resolve(JSON.parse(listJson));
                 } catch (e) {
-                    appendToOutput(`[!] Error parsing devices list: ${e}`, true);
+                    appendToOutput(`[!] 解析设备列表时出错: ${e}`, true);
                     resolve(null);
                 }
             } else {
@@ -531,7 +531,7 @@ function getDeviceList() {
 
 let selectorListener = false;
 
-// Render available device list to select menu
+// 将可用设备列表渲染到选择菜单
 function setupDeviceList() {
     const selectMenu = document.getElementById('select-devices');
 
@@ -540,7 +540,7 @@ function setupDeviceList() {
             if (selectMenu.value === 'refresh') {
                 localStorage.removeItem('PIF_devices_list');
                 localStorage.removeItem('PIF_devices_list_timestamp');
-                selectMenu.innerHTML = '<option value=loading>Loading</option>';
+                selectMenu.innerHTML = '<option value=loading>正在加载</option>';
                 selectMenu.value = 'loading'
                 setupDeviceList();
                 return;
@@ -553,11 +553,11 @@ function setupDeviceList() {
         selectorListener = true;
     }
 
-    // Render device list
+    // 渲染设备列表
     getDeviceList().then(deviceList => {
         selectMenu.innerHTML = `
-            <option value="random">Random</option>
-            <option value="refresh">Refresh List</option>
+            <option value="random">随机</option>
+            <option value="refresh">刷新列表</option>
         `;
 
         if (!deviceList || !deviceList.model || !deviceList.product) return;
@@ -569,7 +569,7 @@ function setupDeviceList() {
             selectMenu.appendChild(option);
         }
 
-        // Select previous model
+        // 选择之前的型号
         if (model && deviceList.model.includes(model)) {
             selectMenu.value = model;
             selectMenu.dispatchEvent(new Event('change'));
