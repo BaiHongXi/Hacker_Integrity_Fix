@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,22 +21,22 @@
                 <div class="toggle first-toggle fp-box">
                     <div class="fp-box-border"></div>
                     <div class="ripple-element" id="fetch">
-                        <span class="toggle-text">Fetch</span>
+                        <span class="toggle-text">获取</span>
                     </div>
                     <div class="ripple-element" id="view">
                         <div class="view-border"></div>
-                        <span class="toggle-text">View</span>
+                        <span class="toggle-text">查看</span>
                     </div>
                     <div class="ripple-element" id="select">
                         <select id="select-devices">
-                            <option value="loading">Loading</option>
+                            <option value="loading">加载中</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="toggle-list script-only ripple-element" id="script-only-container">
                 <div class="toggle">
-                    <span class="toggle-text">Script only mode</span>
+                    <span class="toggle-text">仅脚本模式</span>
                     <label class="toggle-switch">
                         <input type="checkbox" id="toggle-script-only" disabled>
                         <span class="slider round"></span>
@@ -45,25 +45,25 @@
             </div>
             <!-- Spoof config -->
             <div class="toggle-list ripple-element" id="advanced">
-                <span class="toggle-text">Advanced</span>
+                <span class="toggle-text">高级选项</span>
             </div>
         </div>
         <div class="output-terminal">
             <div class="output-terminal-header">
-                <span>output</span>
+                <span>输出</span>
                 <div class="clear-terminal">
                     <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 -960 960 960" width="14px" fill="#ccc"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg>
-                    <span class="clear-terminal-text">clear</span>
+                    <span class="clear-terminal-text">清空</span>
                 </div>
             </div>
             <div class="output-terminal-content"></div>
         </div>
         <div class="overlay" id="unofficial-warning">
             <div class="overlay-content warning-content">
-                <h1>⚠️ Warning</h1>
-                <p>This module has been tampered</p>
-                <p>Please install from official source to proceed</p>
-                <button class="warning-button ripple-element" id="github-btn">Download from GitHub</button>
+                <h1>⚠️ 警告</h1>
+                <p>此模块已被篡改</p>
+                <p>请从官方来源安装以继续</p>
+                <button class="warning-button ripple-element" id="github-btn">从GitHub下载</button>
             </div>
         </div>
     </div>
