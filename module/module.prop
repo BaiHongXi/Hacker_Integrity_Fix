@@ -1,7 +1,5 @@
 id=playintegrityfix
-name=Play Integrity Fix [INJECT]
-version=v4.3-inject-s
-versionCode=43
-author=chiteroman, KOWX712
+name=Hacker_Integrity_Fix
+version=v1.0
+author=chiteroman, KOWX712，白虹汐
 description=Universal modular fix for Play Integrity on devices running Android 8-16
-updateJson=https://raw.githubusercontent.com/KOWX712/PlayIntegrityFix/inject_s/update.json
