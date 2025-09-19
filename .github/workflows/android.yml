@@ -30,14 +30,10 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assembleRelease
 
-    - name: Setup variables
-      run: |
-        VERSION=$(jq -r '.version' update.json)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-    - name: Upload CI module zip as artifact zip
+    - name: Upload CI module zip as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: PlayIntegrityFix_${{ env.VERSION }}-inject-s_${{ github.run_number }}
+        # 固定文件名为Hacker_Integrity_Fix-Rainbow.zip
+        name: Hacker_Integrity_Fix-Rainbow
         path: 'module/*'
         compression-level: 9
